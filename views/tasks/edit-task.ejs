@@ -1,0 +1,27 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/css/forms.css"/>
+<link rel="stylesheet" href="/css/task.css"/>
+</head>
+
+<body>
+    <%- include('../includes/navigation.ejs') %>
+    <main>
+        <form class="task-form" action="/task/<% if (editing) { %>edit-task<% } else { %>add-task<% } %>" method="POST">
+            <div class="form-control">
+                <label for="title">Title</label>
+                <input type="text" name="title" id="title" value="<% if (editing) { %><%= task.title %><%} %>">
+            </div>    
+            <div class="form-control">
+                <label for="content">Content</label>
+                <input type="text" name="content" id="content" value="<% if (editing) { %><%= task.content %><%} %>">
+            </div>
+
+            <% if (editing) { %>
+                <input type="hidden" value="<%= task._id %>" name="taskId" >
+            <% } %>
+
+            <button class="active" type="submit"><% if (editing) { %> Update Task <%} else { %>Add Task <% } %></button>
+        </form>
+    </main>
+
+<%- include('../includes/end.ejs') %>
