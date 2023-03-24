@@ -1,0 +1,19 @@
+.task-form {
+    width: 20rem;
+    max-width: 90%;
+    margin: auto;
+}
+
+.task-item {
+    width: 20rem;
+    max-width: 95%;
+}
+
+.task__title {
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+.task__content {
+    text-align: center;
+}

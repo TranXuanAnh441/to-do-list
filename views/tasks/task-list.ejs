@@ -1,0 +1,28 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/css/task.css"/>
+</head>
+
+<body>
+    <%- include('../includes/navigation.ejs') %>
+    <h2>Tasks List</h2>
+    <main>
+        <% if (tasks.length > 0) { %>
+           <div class="grid">
+            <% for (let task of tasks) { %>
+            <article class="card task-item">
+                <header class="card__header">
+                    <h1 class="task__title"><%= task.title %></h1>
+                </header>
+                <div class="card__content">
+                    <p class="task__content"><%= task.content %></p>
+                </div>
+            </article>
+            <% } %>
+        </div>
+        <% } else {%>
+            <p>No Tasks Found !</p>
+        <% } %>
+    </main>
+
+<%- include('../includes/end.ejs') %>
+
