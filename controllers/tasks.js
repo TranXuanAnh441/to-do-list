@@ -7,19 +7,18 @@ exports.getAddTasks = (req, res, next) => {
 exports.postAddTasks = (req, res, next) => {
     const title = req.body.title;
     const content = req.body.content;
-    const newTask = new Task({title: title, content: content});
+    const deadline = req.body.deadline;
+    const status = req.body.status;
+
+    const newTask = new Task({
+        title: title, 
+        content: content, 
+        deadline: deadline, 
+        status: status
+    });
     newTask
         .save()
         .then(result => res.redirect('/'))
-        .catch(err => console.log(err));
-}
-
-exports.getTasks = (req, res, next) => {    
-    Task
-        .find()
-        .then(tasks => {
-            res.render('tasks/task-list', {'pageTitle': 'Task list', 'tasks' : tasks, path : '/'});
-        })
         .catch(err => console.log(err));
 }
 
@@ -36,10 +35,13 @@ exports.getEditTasks = (req, res, next) => {
             if (!task) {
                 return res.redirect('/');
             }
+            task.deadlineStr = `${task.deadline.getFullYear()}-${(task.deadline.getMonth()+1).toString().padStart(2, "0")}-${task.deadline.getDate().toString().padStart(2, "0")}`;
+            
             res.render('tasks/edit-task', { 
                 pageTitle:"Edit Task", 
                 path:'/task/edit-task',
                 editing: true,
+                selectedStatus: task.status,
                 task: task
             });
         })
@@ -50,10 +52,14 @@ exports.postEditTasks = (req, res, next) => {
     const id = req.body.taskId;
     const updatedTitle = req.body.title;
     const updatedContent = req.body.content;
+    const updatedDeadline = req.body.deadline;
+    const updatedStatus = req.body.status;
     
     Task.findById(id).then(task => {
         task.title = updatedTitle;
         task.content = updatedContent;
+        task.deadline = updatedDeadline;
+        task.status = updatedStatus;
         task.save();
         })
         .then(result => {

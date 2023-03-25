@@ -15,13 +15,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/task', tasksRoutes);
 
-app.use((req, res, next)=> {
+app.use((req, res, next)=> {    
     Task
-    .find()
-    .then(tasks => {
-        res.render('tasks/task-list', {'pageTitle': 'Task list', 'tasks' : tasks, path : '/'});
-    })
-    .catch(err => console.log(err));
+        .find()
+        .then(tasks => {
+            const tasksList = tasks.map(task => {
+                task.deadlineStr = `${task.deadline.getFullYear()}-${(task.deadline.getMonth()+1).toString().padStart(2, "0")}-${task.deadline.getDate().toString().padStart(2, "0")}`;
+                return task;
+            })
+            res.render('tasks/task-list', {'pageTitle': 'Task list', 'tasks' : tasksList, path : '/'});
+        })
+        .catch(err => console.log(err));
 })
 
 mongoose
