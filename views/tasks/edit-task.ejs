@@ -19,10 +19,10 @@
                 <label for="content">Deadline</label>
                 <input type="date" name="deadline" id="deadline" value="<% if (editing) { %><%= task.deadlineStr %><%} %>">
             </div>
-            <select name="status" id="status">
-                <option value="CREATED">CREATED</option>
-                <option value="ONGOING">ONGOING</option>
-                <option value="FINISHED">FINISHED</option>
+            <select name="status" id="status" >
+                <option value="CREATED" <%= editing &&  selectedStatus === "CREATED" ? 'selected' : '' %>>CREATED</option>
+                <option value="ONGOING" <%= editing &&  selectedStatus === "ONGOING" ? 'selected' : '' %>>ONGOING</option>
+                <option value="FINISHED" <%= editing &&  selectedStatus === "FINISHED" ? 'selected' : '' %>>FINISHED</option>
               </select>
 
             <% if (editing) { %>
