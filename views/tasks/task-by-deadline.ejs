@@ -1,0 +1,5 @@
+<div class="grid">
+    <% for (let task of tasks) { %>
+       <%- include(('./task.ejs'), {task: task}); %>
+    <% } %>
+</div>

@@ -1,5 +1,29 @@
 const Task = require('../models/task');
 
+exports.getTasks = (req, res, next) => {
+    const displayMode = req.query.display;
+    let displayTemplate = './task-by-deadline.ejs';
+    if(displayMode=='status') {
+        displayTemplate = './task-by-status.ejs';
+    }
+
+    Task
+    .find()
+    .then(tasks => {
+        const tasksList = tasks.map(task => {
+            task.deadlineStr = `${task.deadline.getFullYear()}-${(task.deadline.getMonth()+1).toString().padStart(2, "0")}-${task.deadline.getDate().toString().padStart(2, "0")}`;
+            return task;
+        })
+        tasksList.sort(function(a,b){return a.deadline < b.deadline});
+        res.render('tasks/task-list', {
+                    'pageTitle': 'Task list', 
+                    'tasks': tasksList,
+                    'displayTemplate': displayTemplate,
+                    path : '/'});
+    })
+    .catch(err => console.log(err));
+}
+
 exports.getAddTasks = (req, res, next) => {
     res.render('tasks/edit-task',  {'pageTitle': 'Add Task', editing: false, path:'/add-task'});
 };

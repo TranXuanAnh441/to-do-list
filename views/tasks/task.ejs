@@ -1,0 +1,21 @@
+<article class="card task-item">
+    <header class="card__header">
+        <h1 class="task__title"><%= task.title %></h1>
+    </header>
+    <div class="card__content">
+        <p class="task__content">CONTENT: <%= task.content %></p>
+    </div>
+    <div class="card__content">
+        <p class="task__deadline">DEADLINE: <%= task.deadlineStr %></p>
+    </div>
+    <div class="card__content">
+        <p class="task__status">STATUS: <%= task.status %></p>
+    </div>
+    <div class="card__actions">
+        <a href="task/edit-task/<%= task._id %>?edit=true" class="btn">Edit</a>
+        <form action="/task/delete-task" method="POST">
+            <input type="hidden" name="taskId" value="<%= task._id %>">
+            <button class="btn" type="submit">Delete this</button>
+        </form>
+    </div>
+</article>

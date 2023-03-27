@@ -6,36 +6,26 @@
     <%- include('../includes/navigation.ejs') %>
     <h2>Tasks List</h2>
     <main>
+        <select name="display" id="display" onchange="javascript:handleSelect(this)">
+            <option value="/">DISPLAY MODE</option>
+            <option value="/?display=status">STATUS</option>
+            <option value="/?display=deadline">DEADLINE</option>
+        </select>
         <% if (tasks.length > 0) { %>
-           <div class="grid">
-            <% for (let task of tasks) { %>
-            <article class="card task-item">
-                <header class="card__header">
-                    <h1 class="task__title"><%= task.title %></h1>
-                </header>
-                <div class="card__content">
-                    <p class="task__content">CONTENT: <%= task.content %></p>
-                </div>
-                <div class="card__content">
-                    <p class="task__deadline">DEADLINE: <%= task.deadlineStr %></p>
-                </div>
-                <div class="card__content">
-                    <p class="task__status">STATUS: <%= task.status %></p>
-                </div>
-                <div class="card__actions">
-                    <a href="task/edit-task/<%= task._id %>?edit=true" class="btn">Edit</a>
-                    <form action="/task/delete-task" method="POST">
-                        <input type="hidden" name="taskId" value="<%= task._id %>">
-                        <button class="btn" type="submit">Delete this</button>
-                    </form>
-                </div>
-            </article>
-            <% } %>
-        </div>
+            <div>
+                <%- include(displayTemplate) %>
+            </div>
         <% } else {%>
-            <p>No Tasks Found !</p>
+             <p>No Tasks Found !</p>
         <% } %>
+
     </main>
+
+    <script type="text/javascript">
+        const handleSelect = (elm) => {
+           window.location = elm.value;
+        }
+    </script>
 
 <%- include('../includes/end.ejs') %>
 
