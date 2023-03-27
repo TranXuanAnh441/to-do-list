@@ -19,6 +19,10 @@ app.get('/', (req, res, next)=> {
     getTasks(req, res, next);
 })
 
+app.use((req, res, next) => {
+    res.render('404.ejs', {pageTitle: 'Not found', path:'/404'});
+});
+
 mongoose
     .connect('mongodb+srv://txanh2002:33112299@cluster0.et7ci3b.mongodb.net/to-do-list')
     .then(result => {
