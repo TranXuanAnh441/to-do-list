@@ -1,0 +1,23 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/css/forms.css"/>
+<link rel="stylesheet" href="/css/task.css"/>
+</head>
+
+<body>
+    <%- include('../includes/navigation.ejs') %>
+    <main>
+        <form class="task-form" action="/category/<% if (editing) { %>edit-category<% } else { %>add-category<% } %>" method="POST">
+            <div class="form-control">
+                <label for="name">Name</label>
+                <input type="text" name="name" id="name" value="<% if (editing) { %><%= category.name %><%} %>">
+            </div>
+            <div class="form-control">
+                <label for="description">Description</label>
+                <textarea name="description" id="description"><% if (editing) { %><%= category.description %><%} %></textarea>
+            </div>
+
+            <button class="active" type="submit"><% if (editing) { %> Update Task <%} else { %>Add Task <% } %></button>
+        </form>
+    </main>
+
+<%- include('../includes/end.ejs') %>

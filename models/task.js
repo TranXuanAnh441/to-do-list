@@ -1,12 +1,7 @@
 const mongoose = require('mongoose');
-
 const Schema = mongoose.Schema;
 
-const taskStatus = [
-    'CREATED',
-    'ONGOING',
-    'FINISHED'
-];
+const defaultTaskStatus = require('../utils/default').defaultTaskStatus;
 
 const Task = new Schema ({
     title: {
@@ -21,10 +16,14 @@ const Task = new Schema ({
         type: Date,
         required: true
     },
-    status : {
+    status: {
         type: String,
-        default: taskStatus[0],
+        default: defaultTaskStatus[0],
         require: true
+    },
+    category: {
+        type: Schema.Types.ObjectId, 
+        ref: 'Category' 
     }
 }, {
     timestamps: true

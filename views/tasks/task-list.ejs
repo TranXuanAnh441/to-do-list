@@ -7,9 +7,10 @@
     <h2>Tasks List</h2>
     <main>
         <select name="display" id="display" onchange="javascript:handleSelect(this)">
-            <option value="/">DISPLAY MODE</option>
-            <option value="/?display=status">STATUS</option>
-            <option value="/?display=deadline">DEADLINE</option>
+            <option value="/" <%= displayMode === "" ? 'selected' : '' %>>CREATED AT</option>
+            <option value="/?display=status" <%= displayMode === "status" ? 'selected' : '' %>>STATUS</option>
+            <option value="/?display=deadline" <%= displayMode === "deadline" ? 'selected' : '' %>>DEADLINE</option>
+            <option value="/?display=category" <%= displayMode === "category" ? 'selected' : '' %>>CATEGORY</option>
         </select>
         <% if (tasks.length > 0) { %>
             <div>

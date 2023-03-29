@@ -1,11 +1,14 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const Task = require('./models/task');
 const mongoose = require('mongoose');
 const path = require('path');
 const app = express();
-const tasksRoutes = require('./routes/tasks');
-const getTasks = require('./controllers/tasks').getTasks;
+const tasksRoutes = require('./routes/task');
+const categoryRoutes = require('./routes/category');
+const Category = require('./models/category');
+const getTasks = require('./controllers/task').getTasks;
+
+const defaultCategories = require('./utils/default').defaultCategories;
 
 app.set('view engine', 'ejs');
 app.set('views', 'views');
@@ -14,6 +17,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/task', tasksRoutes);
+app.use('/category', categoryRoutes);
 
 app.get('/', (req, res, next)=> {    
     getTasks(req, res, next);
@@ -26,6 +30,19 @@ app.use((req, res, next) => {
 mongoose
     .connect('mongodb+srv://txanh2002:33112299@cluster0.et7ci3b.mongodb.net/to-do-list')
     .then(result => {
+        Category.findOne().then(category => {
+            if(!category) {
+                for(const categoryIndex in defaultCategories) {
+                    const newCategory = new Category({
+                        name: `${defaultCategories[categoryIndex]}`
+                    })
+                    newCategory.save();
+                }
+            } else {
+                // console.log(category);
+            }
+        })
+
         console.log('Connected');
         app.listen(3000);
     })
