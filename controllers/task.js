@@ -2,11 +2,6 @@ const Task = require('../models/task');
 
 exports.getTasks = (req, res, next) => {
     const displayMode = req.query.display;
-    let displayTemplate = './task-by-deadline.ejs';
-    if(displayMode=='status') {
-        displayTemplate = './task-by-status.ejs';
-    }
-
     Task
     .find()
     .then(tasks => {
@@ -14,12 +9,27 @@ exports.getTasks = (req, res, next) => {
             task.deadlineStr = `${task.deadline.getFullYear()}-${(task.deadline.getMonth()+1).toString().padStart(2, "0")}-${task.deadline.getDate().toString().padStart(2, "0")}`;
             return task;
         })
-        tasksList.sort(function(a,b){return a.deadline < b.deadline});
-        res.render('tasks/task-list', {
+
+
+        let displayTemplate = './task-by-time.ejs';
+            if (displayMode==='status') {
+                displayTemplate = './task-by-status.ejs';
+            } else if(displayMode==='deadline') {
+                tasksList.sort(function(a,b){return a.deadline > b.deadline});
+            } else if(displayMode==='category'){
+                displayTemplate = './task-by-category.ejs';
+            } else if(!displayMode){
+                tasksList.sort(function(a,b){return a.createdAt < b.createdAt});
+            }
+
+        res.render('tasks/task-list', 
+                {
                     'pageTitle': 'Task list', 
                     'tasks': tasksList,
                     'displayTemplate': displayTemplate,
-                    path : '/'});
+                    'displayMode': displayMode,
+                    path : '/'
+                });
     })
     .catch(err => console.log(err));
 }
