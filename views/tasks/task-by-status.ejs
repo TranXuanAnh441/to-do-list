@@ -1,20 +1,12 @@
-<% for (let task of tasks) { %>
-<div>
-    <% if (task.status == 'CREATED') { %>
-        <p>CREATED</p>
+<% for (const [status, tasksList] of Object.entries(tasks)) { %>
+    <p><%= status %></p>
+    <% if (tasksList.length > 0) { %> 
         <div class="grid">
-            <%- include(('./task.ejs'), {task: task}); %>
-        </div>
-    <% } else if (task.status == 'ONGOING'){%>
-        <p>ONGOING</p>
-        <div class="grid">
-            <%- include(('./task.ejs'), {task: task}); %>
+            <% for (let task of tasksList) { %>
+               <%- include(('./task.ejs'), {task: task}); %>
+            <% } %>
         </div>
     <% } else {%>
-        <p>FINISHED</p>
-        <div class="grid">
-            <%- include(('./task.ejs'), {task: task}); %>
-        </div>
+        <p>No Tasks Found !</p>
     <% } %>
-</div>
 <% } %>

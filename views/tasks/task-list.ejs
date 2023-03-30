@@ -12,14 +12,9 @@
             <option value="/?display=deadline" <%= displayMode === "deadline" ? 'selected' : '' %>>DEADLINE</option>
             <option value="/?display=category" <%= displayMode === "category" ? 'selected' : '' %>>CATEGORY</option>
         </select>
-        <% if (tasks.length > 0) { %>
-            <div>
-                <%- include(displayTemplate) %>
-            </div>
-        <% } else {%>
-             <p>No Tasks Found !</p>
-        <% } %>
-
+        <div>
+            <%- include(displayTemplate) %>
+        </div>
     </main>
 
     <script type="text/javascript">

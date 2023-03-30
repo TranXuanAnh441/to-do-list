@@ -1,7 +1,10 @@
 const Task = require('../models/task');
+const Category = require('../models/category');
+const defaultTaskStatus = require('../utils/default').defaultTaskStatus;
 
 exports.getTasks = (req, res, next) => {
     const displayMode = req.query.display;
+    let taskDisplay;
     Task
     .find()
     .then(tasks => {
@@ -10,22 +13,55 @@ exports.getTasks = (req, res, next) => {
             return task;
         })
 
-
-        let displayTemplate = './task-by-time.ejs';
+        let displayTemplate;
             if (displayMode==='status') {
+                let statusTasks = {};
+                for(defaultTaskStatusIndex in defaultTaskStatus) {
+                    const status = defaultTaskStatus[defaultTaskStatusIndex];
+                    statusTasks[status] = [] 
+                }
+                
+                for(taskIndex in tasksList) {
+                    const task = tasksList[taskIndex];
+                    statusTasks[task.status].push(task);
+                }
+                taskDisplay = statusTasks;
                 displayTemplate = './task-by-status.ejs';
-            } else if(displayMode==='deadline') {
-                tasksList.sort(function(a,b){return a.deadline > b.deadline});
             } else if(displayMode==='category'){
-                displayTemplate = './task-by-category.ejs';
-            } else if(!displayMode){
-                tasksList.sort(function(a,b){return a.createdAt < b.createdAt});
+                let categoryTasks = {};
+                Category
+                .find()
+                .then(category => {
+                    if(category) {
+                        const categoryId = category._id;
+                        const categoryName = category.name;
+                        categoryTasks[categoryName] = [];
+        
+                        for(const taskIndex in tasksList) {
+                            if(tasksList[taskIndex].categoryId == categoryId) {
+                                categoryTasks[categoryName].push(tasksList[taskIndex]);
+                            }
+                        }
+                    }
+                });
+                if (Object.keys(categoryTasks).length === 0) {
+                    categoryTasks['UNDEFINED'] = tasksList;
+                } 
+                taskDisplay = categoryTasks;
+                displayTemplate = './task-by-status.ejs';
+            } else {
+                if(displayMode==='deadline') {
+                    tasksList.sort(function(a,b){return a.deadline < b.deadline});
+                } else {
+                    tasksList.sort(function(a,b){return a.createdAt < b.createdAt});
+                }
+                taskDisplay = tasksList;
+                displayTemplate = './task-by-time.ejs';
             }
-
         res.render('tasks/task-list', 
                 {
                     'pageTitle': 'Task list', 
-                    'tasks': tasksList,
+                    'tasks': taskDisplay,
                     'displayTemplate': displayTemplate,
                     'displayMode': displayMode,
                     path : '/'
