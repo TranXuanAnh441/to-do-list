@@ -19,11 +19,18 @@
                 <label for="content">Deadline</label>
                 <input type="date" name="deadline" id="deadline" value="<% if (editing) { %><%= task.deadlineStr %><%} %>">
             </div>
+
             <select name="status" id="status" >
-                <option value="CREATED" <%= editing &&  selectedStatus === "CREATED" ? 'selected' : '' %>>CREATED</option>
-                <option value="ONGOING" <%= editing &&  selectedStatus === "ONGOING" ? 'selected' : '' %>>ONGOING</option>
-                <option value="FINISHED" <%= editing &&  selectedStatus === "FINISHED" ? 'selected' : '' %>>FINISHED</option>
-              </select>
+            <% for (const status of statusList) { %>
+                <option value="<%= status %>"> <%= status %> </option>
+            <% } %>
+            </select>
+
+            <select name="categoryId" id="categoryId" >
+                <% for (const category of categoryList) { %>
+                    <option value="<%= category._id %>"> <%= category.name %> </option>
+                <% } %>
+            </select>
 
             <% if (editing) { %>
                 <input type="hidden" value="<%= task._id %>" name="taskId" >
@@ -32,5 +39,27 @@
             <button class="active" type="submit"><% if (editing) { %> Update Task <%} else { %>Add Task <% } %></button>
         </form>
     </main>
+
+    <% if (editing) { %>
+        <script>
+            const selectedStatus = <%- JSON.stringify(task.status); %>;
+            const statusOptions = document.getElementById('status').children;
+            for (let i = 0; i < statusOptions.length; i++) {
+                if(statusOptions[i].value===selectedStatus) {
+                    statusOptions[i].selected = true;
+                };
+            }
+        </script>
+
+        <script>
+            const selectedCategoryId = <%- JSON.stringify(task.categoryId); %>;
+            const categoryOption = document.getElementById('categoryId').children;
+            for (let i = 0; i < categoryOption.length; i++) {
+                if(categoryOption[i].value===selectedCategoryId ) {
+                    categoryOption[i].selected = true;
+                };
+            }
+        </script>
+    <% } %>
 
 <%- include('../includes/end.ejs') %>

@@ -1,8 +1,8 @@
-<% for (const [category, tasksList] of Object.entries(tasks)) { %>
-    <p><%= category %></p>
-    <% if (tasksList.length > 0) { %> 
+<% for (const [categoryId, category] of Object.entries(tasks)) { %>
+    <p><%= category.name %></p>
+    <% if (category.tasks.length > 0) { %> 
         <div class="grid">
-            <% for (let task of tasksList) { %>
+            <% for (let task of category.tasks) { %>
                <%- include(('./task.ejs'), {task: task}); %>
             <% } %>
         </div>

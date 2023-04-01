@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const defaultTaskStatus = require('../utils/default').defaultTaskStatus;
 
-const Task = new Schema ({
+const taskSchema = new Schema ({
     title: {
         type: String,
         required: true
@@ -21,7 +21,7 @@ const Task = new Schema ({
         default: defaultTaskStatus[0],
         require: true
     },
-    category: {
+    categoryId: {
         type: Schema.Types.ObjectId, 
         ref: 'Category' 
     }
@@ -29,4 +29,4 @@ const Task = new Schema ({
     timestamps: true
 });
 
-module.exports = mongoose.model('tasks', Task);
+module.exports = mongoose.model('Task', taskSchema);

@@ -1,6 +1,31 @@
 const Task = require('../models/task');
 const Category = require('../models/category');
+const { defaultCategories } = require('../utils/default');
 const defaultTaskStatus = require('../utils/default').defaultTaskStatus;
+
+exports.getTasksByCategory = (req, res, next, tasksList, displayTemplate, displayMode) => {
+    Category
+    .find()
+    .then(categories => {
+        categoryTasks = {};
+        for(categoryId in categories) {
+            const category = categories[categoryId];
+            categoryTasks[category._id] = {name: category.name, tasks: []};
+        }
+        for(const taskIndex in tasksList) {    
+            const task = tasksList[taskIndex];
+            categoryTasks[task.categoryId.toString()].tasks.push(task);
+        }
+        res.render('tasks/task-list', {
+            pageTitle: 'Task list', 
+            tasks: categoryTasks,
+            displayTemplate: displayTemplate,
+            displayMode: displayMode,
+            path : '/'
+        });
+    })
+    .catch(err => console.log(err));
+}
 
 exports.getTasks = (req, res, next) => {
     const displayMode = req.query.display;
@@ -20,35 +45,16 @@ exports.getTasks = (req, res, next) => {
                     const status = defaultTaskStatus[defaultTaskStatusIndex];
                     statusTasks[status] = [] 
                 }
-                
                 for(taskIndex in tasksList) {
                     const task = tasksList[taskIndex];
                     statusTasks[task.status].push(task);
                 }
                 taskDisplay = statusTasks;
                 displayTemplate = './task-by-status.ejs';
-            } else if(displayMode==='category'){
-                let categoryTasks = {};
-                Category
-                .find()
-                .then(category => {
-                    if(category) {
-                        const categoryId = category._id;
-                        const categoryName = category.name;
-                        categoryTasks[categoryName] = [];
-        
-                        for(const taskIndex in tasksList) {
-                            if(tasksList[taskIndex].categoryId == categoryId) {
-                                categoryTasks[categoryName].push(tasksList[taskIndex]);
-                            }
-                        }
-                    }
-                });
-                if (Object.keys(categoryTasks).length === 0) {
-                    categoryTasks['UNDEFINED'] = tasksList;
-                } 
-                taskDisplay = categoryTasks;
-                displayTemplate = './task-by-status.ejs';
+            } else if(displayMode==='category') {
+                displayTemplate = './task-by-category.ejs';
+                this.getTasksByCategory(req, res, next, tasksList, displayTemplate, displayMode);
+                return;
             } else {
                 if(displayMode==='deadline') {
                     tasksList.sort(function(a,b){return a.deadline < b.deadline});
@@ -58,20 +64,30 @@ exports.getTasks = (req, res, next) => {
                 taskDisplay = tasksList;
                 displayTemplate = './task-by-time.ejs';
             }
-        res.render('tasks/task-list', 
-                {
-                    'pageTitle': 'Task list', 
-                    'tasks': taskDisplay,
-                    'displayTemplate': displayTemplate,
-                    'displayMode': displayMode,
+
+        res.render('tasks/task-list', {
+                    pageTitle: 'Task list', 
+                    tasks: taskDisplay,
+                    displayTemplate: displayTemplate,
+                    displayMode: displayMode,
                     path : '/'
                 });
-    })
+        })
     .catch(err => console.log(err));
 }
 
 exports.getAddTasks = (req, res, next) => {
-    res.render('tasks/edit-task',  {'pageTitle': 'Add Task', editing: false, path:'/add-task'});
+    Category
+    .find()
+    .then(categoryList => {
+        res.render('tasks/edit-task',  {
+            pageTitle: 'Add Task', 
+            editing: false, 
+            path:'/add-task',
+            statusList: defaultTaskStatus,
+            categoryList: categoryList,
+        });
+    });
 };
 
 exports.postAddTasks = (req, res, next) => {
@@ -79,17 +95,19 @@ exports.postAddTasks = (req, res, next) => {
     const content = req.body.content;
     const deadline = req.body.deadline;
     const status = req.body.status;
-
+    const categoryId = req.body.categoryId;
     const newTask = new Task({
         title: title, 
         content: content, 
         deadline: deadline, 
-        status: status
+        status: status,
+        categoryId: categoryId
     });
+
     newTask
-        .save()
-        .then(result => res.redirect('/'))
-        .catch(err => console.log(err));
+    .save()
+    .then(result => { res.redirect('/');})
+    .catch(err => console.log(err));
 }
 
 exports.getEditTasks = (req, res, next) => {
@@ -106,13 +124,17 @@ exports.getEditTasks = (req, res, next) => {
                 return res.redirect('/');
             }
             task.deadlineStr = `${task.deadline.getFullYear()}-${(task.deadline.getMonth()+1).toString().padStart(2, "0")}-${task.deadline.getDate().toString().padStart(2, "0")}`;
-            
-            res.render('tasks/edit-task', { 
-                pageTitle:"Edit Task", 
-                path:'/task/edit-task',
-                editing: true,
-                selectedStatus: task.status,
-                task: task
+            Category
+                .find()
+                .then(categoryList => {
+                    res.render('tasks/edit-task', { 
+                        pageTitle:"Edit Task", 
+                        path:'/task/edit-task',
+                        editing: true,
+                        task: task,
+                        statusList: defaultTaskStatus,
+                        categoryList: categoryList,
+                    });
             });
         })
         .catch(err => console.log(err));
@@ -124,12 +146,14 @@ exports.postEditTasks = (req, res, next) => {
     const updatedContent = req.body.content;
     const updatedDeadline = req.body.deadline;
     const updatedStatus = req.body.status;
+    const updatedCategoryId = req.body.categoryId;
     
     Task.findById(id).then(task => {
         task.title = updatedTitle;
         task.content = updatedContent;
         task.deadline = updatedDeadline;
         task.status = updatedStatus;
+        task.categoryId = updatedCategoryId;
         task.save();
         })
         .then(result => {
@@ -146,5 +170,5 @@ exports.postDeleteTasks = (req, res, next) => {
         console.log('DESTROYED TASK');
         res.redirect('/');
     })
-    .catch(err=>console.log(err) ); 
+    .catch(err=>console.log(err)); 
 }
