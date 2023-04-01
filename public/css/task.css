@@ -14,6 +14,6 @@
     text-align: center;
 }
 
-.task__content, .task__deadline, .task__status {
+.task__content, .task__deadline, .task__status, .task__category {
     text-align: center;
 }

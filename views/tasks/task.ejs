@@ -11,6 +11,9 @@
     <div class="card__content">
         <p class="task__status">STATUS: <%= task.status %></p>
     </div>
+    <div class="card__content">
+        <p class="task__category">CATEGORY: <%= task.category.name %></p>
+    </div>
     <div class="card__actions">
         <a href="task/edit-task/<%= task._id %>?edit=true" class="btn">Edit</a>
         <form action="/task/delete-task" method="POST">

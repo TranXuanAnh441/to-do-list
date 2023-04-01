@@ -1,31 +1,6 @@
 const Task = require('../models/task');
 const Category = require('../models/category');
-const { defaultCategories } = require('../utils/default');
 const defaultTaskStatus = require('../utils/default').defaultTaskStatus;
-
-exports.getTasksByCategory = (req, res, next, tasksList, displayTemplate, displayMode) => {
-    Category
-    .find()
-    .then(categories => {
-        categoryTasks = {};
-        for(categoryId in categories) {
-            const category = categories[categoryId];
-            categoryTasks[category._id] = {name: category.name, tasks: []};
-        }
-        for(const taskIndex in tasksList) {    
-            const task = tasksList[taskIndex];
-            categoryTasks[task.categoryId.toString()].tasks.push(task);
-        }
-        res.render('tasks/task-list', {
-            pageTitle: 'Task list', 
-            tasks: categoryTasks,
-            displayTemplate: displayTemplate,
-            displayMode: displayMode,
-            path : '/'
-        });
-    })
-    .catch(err => console.log(err));
-}
 
 exports.getTasks = (req, res, next) => {
     const displayMode = req.query.display;
@@ -37,9 +12,22 @@ exports.getTasks = (req, res, next) => {
             task.deadlineStr = `${task.deadline.getFullYear()}-${(task.deadline.getMonth()+1).toString().padStart(2, "0")}-${task.deadline.getDate().toString().padStart(2, "0")}`;
             return task;
         })
-
-        let displayTemplate;
+        Category
+        .find()
+        .then(categories => {
+            for(categoryIndex in categories) {
+                const category = categories[categoryIndex];
+                for(const taskIndex in tasksList) {    
+                    const task = tasksList[taskIndex];
+                    if(task.categoryId.toString()===category._id.toString()) {
+                        task.category = category
+                    }
+                }
+            }
+            
+            let displayTemplate;
             if (displayMode==='status') {
+                displayTemplate = './task-by-status.ejs';
                 let statusTasks = {};
                 for(defaultTaskStatusIndex in defaultTaskStatus) {
                     const status = defaultTaskStatus[defaultTaskStatusIndex];
@@ -50,29 +38,37 @@ exports.getTasks = (req, res, next) => {
                     statusTasks[task.status].push(task);
                 }
                 taskDisplay = statusTasks;
-                displayTemplate = './task-by-status.ejs';
             } else if(displayMode==='category') {
                 displayTemplate = './task-by-category.ejs';
-                this.getTasksByCategory(req, res, next, tasksList, displayTemplate, displayMode);
-                return;
+                let categoryTasks = {};
+                for(categoryIndex in categories) {
+                    const category = categories[categoryIndex];
+                    categoryTasks[category.name] = [];
+                }
+                for(taskIndex in tasksList) {
+                    const task = tasksList[taskIndex];
+                    categoryTasks[task.category.name].push(task);
+                }
+                taskDisplay = categoryTasks;
             } else {
+                displayTemplate = './task-by-time.ejs';
                 if(displayMode==='deadline') {
                     tasksList.sort(function(a,b){return a.deadline < b.deadline});
                 } else {
                     tasksList.sort(function(a,b){return a.createdAt < b.createdAt});
                 }
                 taskDisplay = tasksList;
-                displayTemplate = './task-by-time.ejs';
             }
-
-        res.render('tasks/task-list', {
-                    pageTitle: 'Task list', 
-                    tasks: taskDisplay,
-                    displayTemplate: displayTemplate,
-                    displayMode: displayMode,
-                    path : '/'
-                });
+            res.render('tasks/task-list', {
+                pageTitle: 'Task list', 
+                tasks: taskDisplay,
+                displayTemplate: displayTemplate,
+                displayMode: displayMode,
+                path : '/',
+            });
         })
+        .catch(err => console.log(err));
+    })
     .catch(err => console.log(err));
 }
 
