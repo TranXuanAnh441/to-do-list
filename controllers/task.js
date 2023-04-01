@@ -24,7 +24,7 @@ exports.getTasks = (req, res, next) => {
                     }
                 }
             }
-            
+
             let displayTemplate;
             if (displayMode==='status') {
                 displayTemplate = './task-by-status.ejs';
@@ -53,9 +53,9 @@ exports.getTasks = (req, res, next) => {
             } else {
                 displayTemplate = './task-by-time.ejs';
                 if(displayMode==='deadline') {
-                    tasksList.sort(function(a,b){return a.deadline < b.deadline});
+                    tasksList.sort(function(a,b){return a.deadline - b.deadline});
                 } else {
-                    tasksList.sort(function(a,b){return a.createdAt < b.createdAt});
+                    tasksList.sort(function(a,b){return a.createdAt - b.createdAt});
                 }
                 taskDisplay = tasksList;
             }
