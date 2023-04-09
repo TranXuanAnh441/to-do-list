@@ -1,12 +1,17 @@
+<div class="container">
 <% for (const [status, tasksList] of Object.entries(tasks)) { %>
-    <p><%= status %></p>
-    <% if (tasksList.length > 0) { %> 
-        <div class="grid">
-            <% for (let task of tasksList) { %>
-               <%- include(('./task.ejs'), {task: task}); %>
-            <% } %>
-        </div>
-    <% } else {%>
-        <p>No Tasks Found !</p>
-    <% } %>
+    <div class="task_div">
+        <h3><%= status %></h3>
+        <hr>
+        <% if (tasksList.length > 0) { %> 
+            <div>
+                <% for (let task of tasksList) { %>
+                   <%- include(('./task.ejs'), {task: task}); %>
+                <% } %>
+            </div>
+        <% } else {%>
+            <p>No Tasks Found !</p>
+        <% } %>
+    </div>
 <% } %>
+</div>

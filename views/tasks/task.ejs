@@ -3,7 +3,7 @@
         <h1 class="task__title"><%= task.title %></h1>
     </header>
     <div class="card__content">
-        <p class="task__content">CONTENT: <%= task.content %></p>
+        <p class="task__content"><%= task.content %></p>
     </div>
     <div class="card__content">
         <p class="task__deadline">DEADLINE: <%= task.deadlineStr %></p>
@@ -18,7 +18,7 @@
         <a href="task/edit-task/<%= task._id %>?edit=true" class="btn">Edit</a>
         <form action="/task/delete-task" method="POST">
             <input type="hidden" name="taskId" value="<%= task._id %>">
-            <button class="btn" type="submit">Delete this</button>
+            <button class="btn" type="submit">Delete</button>
         </form>
     </div>
 </article>
