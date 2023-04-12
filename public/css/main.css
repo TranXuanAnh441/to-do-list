@@ -22,7 +22,7 @@ main {
 .main-header {
   width: 100%;
   height: 3.5rem;
-  background-color: #00695c;
+  background-color: #89CFF0;
   padding: 0 1.5rem;
 }
 
@@ -68,7 +68,9 @@ main {
 
 .card__header,
 .card__content {
+  display: flex;
   padding: 0.8rem;
+  width: auto;
 }
 
 .card__header h1,
@@ -114,15 +116,13 @@ h3 {
 
 .task__div {
   flex: 33.33%;
-  height: 200px;
-  padding: 10px;
-  margin: 5px;
-  background-color: #cccccc;
-  text-align: center;
+  background-color:#e3e0e0;
+  height: 700px;
 }
 
 .container {
   display: flex;
   gap: 1.5rem;
-  margin-left:30px;
+  margin-left:20px;
+  margin-top: 20px;
 }
