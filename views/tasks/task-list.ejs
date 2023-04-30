@@ -7,8 +7,8 @@
     <!-- <h2>Tasks List</h2> -->
     <main>
         <select name="display" id="display" onchange="javascript:handleSelect(this)">
-            <option value="/" <%= displayMode === "" ? 'selected' : '' %>>CREATED AT</option>
-            <option value="/?display=deadline" <%= displayMode === "deadline" ? 'selected' : '' %>>DEADLINE</option>
+            <option value="/" <%= displayMode === "" ? 'selected' : '' %>>Created At</option>
+            <option value="/?display=deadline" <%= displayMode === "deadline" ? 'selected' : '' %>>Deadline</option>
         </select>
         <div>
             <%- include('./task-by-status.ejs') %>

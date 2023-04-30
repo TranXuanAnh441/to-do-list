@@ -19,6 +19,11 @@ main {
   margin: auto;
 }
 
+a { 
+  text-decoration: none; 
+  color: black; 
+}
+
 .main-header {
   width: 100%;
   height: 3.5rem;
@@ -68,12 +73,13 @@ main {
 
 .card__header,
 .card__content {
-  padding: 0.6rem;
+  padding: 0.35rem;
   width: auto;
 }
 
 .card__header {
   display: inline-block;
+  margin-top: 5px;
 }
 
 .card__content {
@@ -123,7 +129,7 @@ h3 {
 
 .task__div {
   flex: 33.33%;
-  background-color:#eae9e9;
+  background-color:#e8f0f5;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
   /* height: 450px; */
 }

@@ -1,7 +1,7 @@
 const defaultTaskStatus = [
-    'CREATED',
-    'ONGOING',
-    'FINISHED'
+    'Created',
+    'Ongoing',
+    'Finished'
 ];
 
 const defaultCategories = {
@@ -9,7 +9,10 @@ const defaultCategories = {
     "meeting" : "red",
     "chores" : "yellow",
     "paperwork" : "green",
-}
+};
+
+const defaultColorScheme = ["blue", "red", "yellow", "green", "orange", "navy", "pink", "purple", "black"];
 
 exports.defaultTaskStatus = defaultTaskStatus;
 exports.defaultCategories = defaultCategories;
+exports.colorScheme = defaultColorScheme;

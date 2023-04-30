@@ -12,11 +12,11 @@
 }
 
 .task__title {
-    font-size: 1.2rem;
+    font-size: 1.0rem;
 }
 
 .task__content {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
 }
 
 .task__category {
@@ -30,8 +30,15 @@
     font-style: oblique;
 }
 
+.add-task-status {
+    margin-left : 20px;
+    margin-bottom: 10px;
+    display: inline-block;
+}
+
 .status_title {
     margin-left: 30px;
+    color: Navy;
 }
 
 /* .dropdown {
@@ -47,3 +54,4 @@
     display: block;
 }
    */
+
