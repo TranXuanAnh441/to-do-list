@@ -2,7 +2,6 @@
 <% for (const [status, tasksList] of Object.entries(tasks)) { %>
     <div class="task__div">
         <h3 class="status_title"><%= status %></h3>
-        <!-- <hr> -->
         <% if (tasksList.length > 0) { %> 
             <div>
                 <% for (let task of tasksList) { %>
