@@ -4,12 +4,12 @@ const defaultTaskStatus = [
     'FINISHED'
 ];
 
-const defaultCategories = [
-    "homework",
-    "meeting",
-    "chores",
-    "paperwork"
-]
+const defaultCategories = {
+    "homework" : "blue",
+    "meeting" : "red",
+    "chores" : "yellow",
+    "paperwork" : "green",
+}
 
 exports.defaultTaskStatus = defaultTaskStatus;
 exports.defaultCategories = defaultCategories;

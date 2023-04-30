@@ -68,7 +68,7 @@ main {
 
 .card__header,
 .card__content {
-  padding: 0.8rem;
+  padding: 0.6rem;
   width: auto;
 }
 
@@ -124,6 +124,8 @@ h3 {
 .task__div {
   flex: 33.33%;
   background-color:#eae9e9;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  /* height: 450px; */
 }
 
 .container {

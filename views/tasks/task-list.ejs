@@ -4,16 +4,14 @@
 
 <body>
     <%- include('../includes/navigation.ejs') %>
-    <h2>Tasks List</h2>
+    <!-- <h2>Tasks List</h2> -->
     <main>
         <select name="display" id="display" onchange="javascript:handleSelect(this)">
             <option value="/" <%= displayMode === "" ? 'selected' : '' %>>CREATED AT</option>
-            <option value="/?display=status" <%= displayMode === "status" ? 'selected' : '' %>>STATUS</option>
             <option value="/?display=deadline" <%= displayMode === "deadline" ? 'selected' : '' %>>DEADLINE</option>
-            <option value="/?display=category" <%= displayMode === "category" ? 'selected' : '' %>>CATEGORY</option>
         </select>
         <div>
-            <%- include(displayTemplate) %>
+            <%- include('./task-by-status.ejs') %>
         </div>
     </main>
 

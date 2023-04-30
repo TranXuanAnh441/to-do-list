@@ -4,70 +4,39 @@ const defaultTaskStatus = require('../utils/default').defaultTaskStatus;
 
 exports.getTasks = (req, res, next) => {
     const displayMode = req.query.display;
-    let taskDisplay;
     Task
     .find()
+    .populate('categoryId')
     .then(tasks => {
         const tasksList = tasks.map(task => {
             task.deadlineStr = `${task.deadline.getFullYear()}-${(task.deadline.getMonth()+1).toString().padStart(2, "0")}-${task.deadline.getDate().toString().padStart(2, "0")}`;
             return task;
         })
-        Category
-        .find()
-        .then(categories => {
-            for(categoryIndex in categories) {
-                const category = categories[categoryIndex];
-                for(const taskIndex in tasksList) {    
-                    const task = tasksList[taskIndex];
-                    if(task.categoryId.toString()===category._id.toString()) {
-                        task.category = category
-                    }
-                }
-            }
 
-            let displayTemplate;
-            if (displayMode==='status') {
-                displayTemplate = './task-by-status.ejs';
-                let statusTasks = {};
-                for(defaultTaskStatusIndex in defaultTaskStatus) {
-                    const status = defaultTaskStatus[defaultTaskStatusIndex];
-                    statusTasks[status] = [] 
-                }
-                for(taskIndex in tasksList) {
-                    const task = tasksList[taskIndex];
-                    statusTasks[task.status].push(task);
-                }
-                taskDisplay = statusTasks;
-            } else if(displayMode==='category') {
-                displayTemplate = './task-by-category.ejs';
-                let categoryTasks = {};
-                for(categoryIndex in categories) {
-                    const category = categories[categoryIndex];
-                    categoryTasks[category.name] = [];
-                }
-                for(taskIndex in tasksList) {
-                    const task = tasksList[taskIndex];
-                    categoryTasks[task.category.name].push(task);
-                }
-                taskDisplay = categoryTasks;
-            } else {
-                displayTemplate = './task-by-time.ejs';
-                if(displayMode==='deadline') {
-                    tasksList.sort(function(a,b){return a.deadline - b.deadline});
-                } else {
-                    tasksList.sort(function(a,b){return a.createdAt - b.createdAt});
-                }
-                taskDisplay = tasksList;
-            }
-            res.render('tasks/task-list', {
-                pageTitle: 'Task list', 
-                tasks: taskDisplay,
-                displayTemplate: displayTemplate,
-                displayMode: displayMode,
-                path : '/',
-            });
-        })
-        .catch(err => console.log(err));
+        if(displayMode==='deadline') {
+            tasksList.sort(function(a,b){return a.deadline - b.deadline});
+            console.log
+        } else {
+            tasksList.sort(function(a,b){return a.createdAt - b.createdAt});
+        }
+
+        let statusTasks = {};
+        for(defaultTaskStatusIndex in defaultTaskStatus) {
+            const status = defaultTaskStatus[defaultTaskStatusIndex];
+            statusTasks[status] = [] 
+        }
+
+        for(taskIndex in tasksList) {
+            const task = tasksList[taskIndex];
+            statusTasks[task.status].push(task);
+        }
+
+        res.render('tasks/task-list', {
+            pageTitle: 'Task list', 
+            tasks: statusTasks,
+            displayMode: displayMode,
+            path : '/',
+        });
     })
     .catch(err => console.log(err));
 }

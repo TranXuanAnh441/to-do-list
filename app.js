@@ -32,9 +32,10 @@ mongoose
     .then(result => {
         Category.findOne().then(category => {
             if(!category) {
-                for(const categoryIndex in defaultCategories) {
+                for (const [category, color] of Object.entries(defaultCategories)) {
                     const newCategory = new Category({
-                        name: `${defaultCategories[categoryIndex]}`
+                        name: `${category}`,
+                        color: `${color}`,
                     })
                     newCategory.save();
                 }
