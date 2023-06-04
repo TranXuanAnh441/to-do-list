@@ -21,3 +21,8 @@
 .form-control textarea:focus {
     outline-color: #00695c;
 }
+
+.task-form{
+    color: white;
+    font-size: 20px;
+}
